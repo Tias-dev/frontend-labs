@@ -38,7 +38,9 @@
           }
         ];
       in {
-        packages = {};
+        packages = {
+          simple-site = pkgs.callPackage ./simple-site {};
+        };
         devShells = {
           default = inputs.devenv.lib.mkShell {
             inherit inputs pkgs;
