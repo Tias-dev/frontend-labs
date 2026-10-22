@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- just for tailwindcss -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      .dot-img {
+        height: 6px;
+      }
+      img.square {
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      class="px-50 bg-black items-center text-white flex justify-between min-h-20"
+    >
+      <span>Сайт концертно-экскурсионных программ</span>
+      <div class="flex gap-2 align-middle">
+        <div>Афиша</div>
+        <div class="p-2">
+          <img class="dot-img" src="./assets/rectangle.svg" />
+        </div>
+        <div>Заказ билетов</div>
+        <div class="p-2">
+          <img class="dot-img" src="./assets/rectangle.svg" />
+        </div>
+        <div>Контакты</div>
+        <div class="p-2">
+          <img class="dot-img" src="./assets/rectangle.svg" />
+        </div>
+        <div>История дворца</div>
+        <div class="p-2">
+          <img class="dot-img" src="./assets/rectangle.svg" />
+        </div>
+        <div>Галерея</div>
+        <div class="p-2">
+          <img class="dot-img" src="./assets/rectangle.svg" />
+        </div>
+        <div>Планы залов</div>
+      </div>
+    </header>
+
+    <div class="mx-50 py-30">
+      <div class="flex">
+        <img src="./assets/slider__main.png" width="60%" class="rounded-3xl" />
+        <div class="ml-10" style="width: 40%">
+          <div class="flex mb-10 w-full gap-5 items-center bg-gray-100 p-3">
+            <img
+              src="./assets/left-side-1.jpg"
+              width="80px"
+              class="square rounded-xl"
+            />
+            <span>Опера VS Оперетта</span>
+          </div>
+          <div class="flex w-full gap-5 items-center bg-gray-100 p-3">
+            <img
+              src="./assets/left-side-2.jpg"
+              width="80px"
+              class="square rounded-xl"
+            />
+            <span>Антонио Вивальди. Времена года</span>
+          </div>
+        </div>
+      </div>
+      <div class="feed mt-20">
+        <div class="feed-title flex justify-between">
+          <span class="text-5xl">Афиша</span>
+          <div class="flex items-center gap-3">
+            <img src="./assets/calendar-logo.svg" class="square" width="35px" />
+            <span class="ml-3">Все мероприятия</span>
+          </div>
+        </div>
+        <div class="feed-content">
+          <div class="feed-item bg-gray-100 rounded-xl p-5 my-5">
+            <div class="feed-date">
+              <span class="text-9xl">3</span>
+              <span class="text-3xl">июня</span>
+            </div>
+            <div class="feed-image"></div>
+            <div class="feed-notes"></div>
+            <div class="feed-buy-ticket"></div>
+          </div>
+          <div
+            class="feed-item bg-gray-100 rounded-xl p-5 my-5 grid grid-cols-4"
+          >
+            <div class="feed-date grid grid-rows-2 bg-gray-300">
+              <span class="text-9xl">30</span>
+              <span class="text-3xl">июня</span>
+            </div>
+            <div class="feed-image"></div>
+            <div class="feed-notes"></div>
+            <div class="feed-buy-ticket"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
