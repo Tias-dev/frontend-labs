@@ -33,9 +33,11 @@
         ...
       }: let
         nvim = inputs.nixvim.lib.neovimWithOverrides system [
-          {
+          ({lib, ...}: {
             frontend.enable = true;
-          }
+            langChanger.enable = false;
+            opts.shiftwidth = lib.mkForce 2;
+          })
         ];
       in {
         packages = {
