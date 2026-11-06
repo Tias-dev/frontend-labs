@@ -14,6 +14,34 @@ class DashboardColumnView extends ViewBase {
   removeWidget(widget: ViewBase) {
     super.removeChild(widget);
   }
+
+  render(): HTMLElement {
+    const result = super.render();
+
+    result.addEventListener("dragover", (event: DragEvent) => {
+      event.preventDefault();
+      result.classList.add("column-hovered");
+    });
+    result.addEventListener("dragleave", (_: DragEvent) => {
+      result.classList.remove("column-hovered");
+    });
+    result.addEventListener("drop", (event: DragEvent) => {
+      event.preventDefault();
+      result.classList.remove("column-hovered");
+      if (!event.dataTransfer) {
+        alert("data transfer not accessible, so drag mechanics will not work!");
+        return;
+      }
+
+      const draggedItemId = event.dataTransfer.getData("text/plain");
+      const draggedItem = document.getElementById(draggedItemId);
+      if (draggedItem) {
+        result.append(draggedItem);
+      }
+    });
+
+    return result;
+  }
 }
 
 export class DashboardView extends ViewBase {

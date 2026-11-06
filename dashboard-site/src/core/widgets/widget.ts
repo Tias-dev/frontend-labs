@@ -45,4 +45,25 @@ export class Widget extends ViewBase {
       this._widget_view.hide();
     }
   }
+
+  render(): HTMLElement {
+    const result = super.render();
+
+    // drag logic
+    result.setAttribute("draggable", "true");
+    result.addEventListener("dragstart", (event: DragEvent) => {
+      if (!event.dataTransfer) {
+        alert("data transfer not accessible, so drag mechanics will not work!");
+        return;
+      }
+
+      event.dataTransfer.setData("text/plain", `${this.id()}`);
+      result.classList.add("dragging");
+    });
+    result.addEventListener("dragend", (_: DragEvent) => {
+      result.classList.remove("dragging");
+    });
+
+    return result;
+  }
 }

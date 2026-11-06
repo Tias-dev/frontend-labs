@@ -360,3 +360,11 @@ code {
   width: 90%;
   min-height: 120px;
 }
+
+.dragging {
+  opacity: 50%;
+}
+
+.column-hovered {
+  opacity: 50%;
+}
