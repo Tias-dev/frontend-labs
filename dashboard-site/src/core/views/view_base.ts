@@ -120,22 +120,13 @@ export class ViewBase implements Renderable {
     return this._hiden;
   }
 
-  protected resolveEffects(): string {
-    if (this._effects.length == 0) {
-      return "";
-    }
-    let className = this._effects[0].toClassName();
-    for (let i = 1; i < this._effects.length; ++i) {
-      className += " " + this._effects[i].toClassName();
-    }
-    return className;
-  }
-
   render(): HTMLElement {
     let result = document.createElement(this._base_element);
     result.setAttribute("id", `${this._id}`);
 
-    result.className = this.resolveEffects();
+    result.classList.add(
+      ...this._effects.map((effect) => effect.toClassName()),
+    );
     if (this._childs.length > 0) {
       for (let i = 0; i < this._childs.length; ++i) {
         result.append(this._childs[i].render());
