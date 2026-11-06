@@ -12,12 +12,14 @@ export class WidgetTopBarView extends ViewBase {
   constructor(id: number) {
     super(id, "div");
     this._label = new LabelView(GetId());
-    this._collapse_button = new ButtonView(GetId(), "collapse-button");
-    this._close_button = new ButtonView(GetId(), "close-button");
+    this._collapse_button = new ButtonView(GetId(), "collapse-button", "_");
+    this._close_button = new ButtonView(GetId(), "close-button", "X");
 
     this.addChild(this._label);
     this.addChild(this._collapse_button);
     this.addChild(this._close_button);
+
+    this._label.addEffect(new Effect("topbar-label"));
 
     this.addEffect(new Effect("topbar"));
   }

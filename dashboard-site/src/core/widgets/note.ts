@@ -1,3 +1,4 @@
+import { Effect } from "../effect";
 import { GetId } from "../id";
 import { TextView } from "../views/text";
 import { Widget } from "./widget";
@@ -9,6 +10,7 @@ export class Note extends Widget {
     const content = new TextView(GetId());
     super(id, content);
 
+    content.addEffect(new Effect("note-content"));
     content.addInputChangeHandler((new_text: string) => {
       this._text = new_text;
     });

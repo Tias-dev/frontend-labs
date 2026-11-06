@@ -4,11 +4,13 @@ import { ViewBase } from "./view_base";
 export class ButtonView extends ViewBase {
   private _handlers: (() => void)[] = [];
   protected _name: string;
+  protected _text: string;
 
-  constructor(id: number, name: string) {
+  constructor(id: number, name: string, text: string = "") {
     super(id, "button");
 
     this._name = name;
+    this._text = text;
 
     this.addEffect(new Effect(`button-${name}`));
   }
@@ -30,6 +32,7 @@ export class ButtonView extends ViewBase {
 
     result.setAttribute("type", "button");
     result.addEventListener("click", (e: Event) => this.onClick(e));
+    result.append(this._text);
 
     return result;
   }

@@ -31,7 +31,7 @@ export class ViewBase implements Renderable {
     return this._base_element;
   }
 
-  protected addEffect(effect: Effect): void {
+  addEffect(effect: Effect): void {
     for (let i = 0; i < this._effects.length; ++i) {
       if (this._effects[i].id() == effect.id()) {
         return;
@@ -47,7 +47,7 @@ export class ViewBase implements Renderable {
     }
   }
 
-  protected removeEffect(effect: Effect): void {
+  removeEffect(effect: Effect): void {
     let new_effects: Effect[] = [];
     for (let i = 0; i < this._effects.length; ++i) {
       if (this._effects[i] == effect) {

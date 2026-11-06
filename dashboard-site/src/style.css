@@ -295,17 +295,6 @@ code {
   }
 }
 
-.dashboard {
-  display: flex;
-  width: 100%;
-  min-height: 100px;
-}
-
-.dashboard-column {
-  border: thick double white;
-  width: 100%;
-}
-
 .toolbar {
   min-height: 30px;
   display: flex;
@@ -332,4 +321,42 @@ code {
 
 .horizontal-separator {
   width: 100%;
+}
+
+.dashboard {
+  display: flex;
+  width: 100%;
+  min-height: 100px;
+}
+
+.dashboard-column {
+  margin-inline: 10px;
+  display: grid;
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+}
+
+.widget {
+  background: var(--accent-bg);
+  padding: 5px;
+  display: grid;
+  gap: 5px;
+  place-items: center;
+  border-radius: 10px;
+}
+
+.topbar {
+  width: 90%;
+  display: flex;
+  gap: 5px;
+}
+
+.topbar-label {
+  width: 100%;
+}
+
+.note-content {
+  width: 90%;
+  min-height: 120px;
 }

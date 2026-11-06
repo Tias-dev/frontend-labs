@@ -21,8 +21,10 @@ let toolbar = new ToolBarView(GetId(), [
 let note1 = new Note(GetId());
 let note2 = new Note(GetId());
 let note3 = new Note(GetId());
+let note4 = new Note(GetId());
 
 dashboard.addColumnWidget(0, note1);
+dashboard.addColumnWidget(0, note4);
 dashboard.addColumnWidget(1, note2);
 dashboard.addColumnWidget(2, note3);
 
