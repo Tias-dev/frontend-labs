@@ -294,3 +294,42 @@ code {
     border-right-color: var(--border);
   }
 }
+
+.dashboard {
+  display: flex;
+  width: 100%;
+  min-height: 100px;
+}
+
+.dashboard-column {
+  border: thick double white;
+  width: 100%;
+}
+
+.toolbar {
+  min-height: 30px;
+  display: flex;
+  gap: 200px;
+  justify-content: center;
+}
+
+.tool-item {
+  height: 50px;
+  width: 50px;
+}
+
+.tool-add-widget {
+  background: cyan;
+}
+
+.tool-reset-dashboard {
+  background: white;
+}
+
+.tool-change-theme {
+  background: green;
+}
+
+.horizontal-separator {
+  width: 100%;
+}

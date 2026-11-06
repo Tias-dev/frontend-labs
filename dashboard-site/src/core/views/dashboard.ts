@@ -1,31 +1,43 @@
-import { WidgetView } from "./widget_view";
+import { Effect } from "../effect";
+import { GetId } from "../id";
+import { ViewBase } from "./view_base";
 
-export class DashboardView extends WidgetView {
-  private _columns: number;
-  private _widget_column: Map<number, number>; // widget id -> column
-
-  constructor(id: number, columns: number) {
-    super(id, "div", [])
-    this._columns = columns;
+class DashboardColumnView extends ViewBase {
+  constructor(id: number) {
+    super(id, "div");
+    this.addEffect(new Effect("dashboard-column"));
   }
 
-  addColumnWidget(column: number, child: WidgetView): void {
-    if(this._columns <= column) {
+  addWidget(widget: ViewBase) {
+    super.addChild(widget);
+  }
+  removeWidget(widget: ViewBase) {
+    super.removeChild(widget);
+  }
+}
+
+export class DashboardView extends ViewBase {
+  constructor(id: number, columns: number) {
+    super(id, "div", []);
+    for (let i = 0; i < columns; ++i) {
+      this.addChild(new DashboardColumnView(GetId()));
+    }
+    this.addEffect(new Effect("dashboard"));
+  }
+
+  addColumnWidget(column: number, child: ViewBase): void {
+    if (this._childs.length <= column) {
       alert("Trying to add widget out of columns range!");
       return;
     }
-    super.addChild(child);
-    this._widget_column[child.id()] = column;
+    (this._childs[column] as DashboardColumnView).addWidget(child);
   }
 
-  removeWidget(child: WidgetView): void {
-    this.removeChild(child);
-    this._widget_column.delete(child.id());
-  }
-
-  render(): HTMLElement {
-    let result = document.createElement(this.baseElement());
-
-    return result;
+  removeWidget(column: number, child: ViewBase): void {
+    if (this._childs.length <= column) {
+      alert("Trying to add widget out of columns range!");
+      return;
+    }
+    (this._childs[column] as DashboardColumnView).removeWidget(child);
   }
 }

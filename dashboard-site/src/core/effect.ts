@@ -1,5 +1,9 @@
-export abstract class EffectBase {
+export class Effect {
   private readonly _id: string;
+
+  constructor(id: string) {
+    this._id = id;
+  }
 
   id(): string {
     return this._id;
@@ -8,6 +12,4 @@ export abstract class EffectBase {
   toClassName(): string {
     return this._id;
   }
-
-  abstract toClassDefinition(): string;
 }

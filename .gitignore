@@ -27,3 +27,4 @@ dist-ssr
 *.sw?
 result
 .pre-commit-config.yaml
+temp-site
