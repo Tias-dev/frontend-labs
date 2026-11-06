@@ -8,6 +8,8 @@ export class ViewBase implements Renderable {
   protected _childs: ViewBase[];
 
   protected _html_element: HTMLElement | null = null;
+  protected _display_status: string = "";
+  protected _hiden: boolean = false;
 
   constructor(
     id: number,
@@ -93,6 +95,29 @@ export class ViewBase implements Renderable {
 
   protected removeChild(child: ViewBase): void {
     this._childs = this._childs.filter((child_) => child_.id() != child.id());
+  }
+
+  hide() {
+    if (this._html_element == null) {
+      console.log("Trying to hide not existing element!");
+      return;
+    }
+    this._display_status = this._html_element.style.display;
+    this._html_element.style.display = "none";
+    this._hiden = true;
+  }
+
+  unhide() {
+    if (this._html_element == null) {
+      console.log("Trying to unhide not existing element!");
+      return;
+    }
+    this._html_element.style.display = this._display_status;
+    this._hiden = false;
+  }
+
+  hidden(): boolean {
+    return this._hiden;
   }
 
   protected resolveEffects(): string {

@@ -39,6 +39,10 @@ export class Widget extends ViewBase {
   }
 
   collapseToggle() {
-    console.log("Do toggle things!");
+    if(this._widget_view.hidden()) {
+      this._widget_view.unhide();
+    } else {
+      this._widget_view.hide();
+    }
   }
 }
