@@ -1,8 +1,9 @@
 import { Effect } from "../effect";
+import { Event as CustomEvent } from "../event";
 import { ViewBase } from "./view_base";
 
 export class ButtonView extends ViewBase {
-  private _handlers: (() => void)[] = [];
+  private _onClickEvent: CustomEvent<void>;
   protected _name: string;
   protected _text: string;
 
@@ -11,20 +12,19 @@ export class ButtonView extends ViewBase {
 
     this._name = name;
     this._text = text;
+    this._onClickEvent = new CustomEvent<void>();
 
     this.addEffect(new Effect(`button-${name}`));
   }
 
   addOnClickHandler(handler: () => void) {
-    this._handlers.push(handler);
+    this._onClickEvent.addHandler(handler);
   }
 
   protected onClick(_: Event) {
     console.log(`Clicked on button: ${this._name}`);
 
-    for (let i = 0; i < this._handlers.length; ++i) {
-      this._handlers[i]();
-    }
+    this._onClickEvent.invoke();
   }
 
   render(): HTMLElement {

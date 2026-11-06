@@ -1,7 +1,7 @@
 import { Effect } from "../effect";
 import { ViewBase } from "./view_base";
 
-export class HorizontalSeparatorView extends ViewBase {
+export class HorizontalSeparator extends ViewBase {
   private readonly _space: number;
   constructor(id: number, space: number) {
     super(id, "div");

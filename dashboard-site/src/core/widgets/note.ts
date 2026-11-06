@@ -1,13 +1,13 @@
 import { Effect } from "../effect";
 import { GetId } from "../id";
-import { TextView } from "../views/text";
+import { Text } from "../views/text";
 import { Widget } from "./widget";
 
 export class Note extends Widget {
   private _text: string = "";
 
   constructor(id: number) {
-    const content = new TextView(GetId());
+    const content = new Text(GetId());
     super(id, content);
 
     content.addEffect(new Effect("note-content"));

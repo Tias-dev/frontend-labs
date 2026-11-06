@@ -1,7 +1,7 @@
 import { Effect } from "../effect";
 import { ButtonView } from "./button";
 
-export class ToolView extends ButtonView {
+export class Tool extends ButtonView {
   private readonly _hoverText: string;
   private _counter: number = 0;
 

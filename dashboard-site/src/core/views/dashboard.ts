@@ -1,18 +1,72 @@
 import { Effect } from "../effect";
+import { Event as CustomEvent } from "../event";
 import { GetId } from "../id";
+import { Widget } from "../widgets/widget";
 import { ViewBase } from "./view_base";
 
-class DashboardColumnView extends ViewBase {
+class DashboardColumn extends ViewBase {
+  onDraggedItemHoverEvent: CustomEvent<void>;
+  dragged_item: Widget | null = null;
   constructor(id: number) {
     super(id, "div");
+    this.onDraggedItemHoverEvent = new CustomEvent<void>();
+
     this.addEffect(new Effect("dashboard-column"));
   }
 
-  addWidget(widget: ViewBase) {
-    super.addChild(widget);
+  addWidget(
+    widget: ViewBase,
+    after_i: number = -1,
+    update_html: boolean = true,
+  ) {
+    console.log("adding element to column " + this.id());
+    super.addChild(widget, after_i, update_html);
   }
+
   removeWidget(widget: ViewBase) {
     super.removeChild(widget);
+  }
+
+  clearWidgets() {
+    this._childs = [];
+  }
+
+  private onDraggedItemHoverHandler(event: DragEvent): void {
+    this.onDraggedItemHoverEvent.invoke();
+    const y = event.clientY;
+    let closestChild: HTMLElement | null = null;
+    let closestDistance = 1e9;
+    this.htmlElement().childNodes.forEach((child_node) => {
+      const child = child_node as HTMLElement;
+      const bbox = child.getBoundingClientRect();
+      const middle = (bbox.top + bbox.bottom) / 2;
+      if (Math.abs(middle - y) < closestDistance) {
+        closestChild = child;
+        closestDistance = Math.abs(middle - y);
+      }
+    });
+    if (closestChild == null) {
+      this.htmlElement().append(this.dragged_item.htmlElement());
+      return;
+    }
+    if (Number(closestChild.id) == this.dragged_item.id()) {
+      return;
+    }
+    const closestChildBbox = closestChild.getBoundingClientRect();
+    const relativeY = y - closestChildBbox.top;
+    const isTopHalf = relativeY < closestChildBbox.height / 2;
+    if (isTopHalf) {
+      this.htmlElement().insertBefore(
+        this.dragged_item.htmlElement(),
+        closestChild,
+      );
+    } else {
+      this.htmlElement().insertBefore(
+        this.dragged_item.htmlElement(),
+        closestChild.nextSibling,
+      );
+    }
+    return;
   }
 
   render(): HTMLElement {
@@ -21,6 +75,7 @@ class DashboardColumnView extends ViewBase {
     result.addEventListener("dragover", (event: DragEvent) => {
       event.preventDefault();
       result.classList.add("column-hovered");
+      this.onDraggedItemHoverHandler(event);
     });
     result.addEventListener("dragleave", (_: DragEvent) => {
       result.classList.remove("column-hovered");
@@ -28,37 +83,77 @@ class DashboardColumnView extends ViewBase {
     result.addEventListener("drop", (event: DragEvent) => {
       event.preventDefault();
       result.classList.remove("column-hovered");
-      if (!event.dataTransfer) {
-        alert("data transfer not accessible, so drag mechanics will not work!");
-        return;
-      }
-
-      const draggedItemId = event.dataTransfer.getData("text/plain");
-      const draggedItem = document.getElementById(draggedItemId);
-      if (draggedItem) {
-        result.append(draggedItem);
-      }
     });
 
     return result;
   }
 }
 
-export class DashboardView extends ViewBase {
+export class Dashboard extends ViewBase {
+  private _dragged_widget: Widget | null = null;
+  private _widgets_map: Map<number, Widget> = new Map<number, Widget>();
+
   constructor(id: number, columns: number) {
     super(id, "div", []);
     for (let i = 0; i < columns; ++i) {
-      this.addChild(new DashboardColumnView(GetId()));
+      const column = new DashboardColumn(GetId());
+      this.addChild(column);
     }
     this.addEffect(new Effect("dashboard"));
   }
 
-  addColumnWidget(column: number, child: ViewBase): void {
+  private onWidgetDragStart(widget: Widget, _: DragEvent) {
+    this._dragged_widget = widget;
+    for (let i = 0; i < this._childs.length; ++i) {
+      (this._childs[i] as DashboardColumn).dragged_item = widget;
+    }
+    this._dragged_widget.addEffect(new Effect("dragging"));
+  }
+
+  private onWidgetDragEnd(_: Widget, __: DragEvent) {
+    for (let i = 0; i < this._childs.length; ++i) {
+      (this._childs[i] as DashboardColumn).dragged_item = null;
+    }
+
+    this._dragged_widget.removeEffect(new Effect("dragging"));
+    this._dragged_widget = null;
+    this.resyncColumns();
+  }
+
+  private onWidgetDragMove(_: Widget, __: DragEvent) {}
+
+  private resyncColumns() {
+    for (let i = 0; i < this._childs.length; ++i) {
+      const column = this._childs[i] as DashboardColumn;
+      const column_html = column.htmlElement();
+      column.clearWidgets();
+      column_html.childNodes.forEach((child) => {
+        column.addWidget(
+          this._widgets_map[Number((child as HTMLElement).id)],
+          -1,
+          false,
+        );
+      });
+    }
+  }
+
+  addColumnWidget(column: number, widget: Widget): void {
     if (this._childs.length <= column) {
       alert("Trying to add widget out of columns range!");
       return;
     }
-    (this._childs[column] as DashboardColumnView).addWidget(child);
+    (this._childs[column] as DashboardColumn).addWidget(widget);
+    this._widgets_map[widget.id()] = widget;
+
+    widget.addDragStartHandler((data) => {
+      this.onWidgetDragStart(data.widget, data.event);
+    });
+    widget.addDragEndHandler((data) => {
+      this.onWidgetDragEnd(data.widget, data.event);
+    });
+    widget.addDragMoveHandler((data) => {
+      this.onWidgetDragMove(data.widget, data.event);
+    });
   }
 
   removeWidget(column: number, child: ViewBase): void {
@@ -66,6 +161,13 @@ export class DashboardView extends ViewBase {
       alert("Trying to add widget out of columns range!");
       return;
     }
-    (this._childs[column] as DashboardColumnView).removeWidget(child);
+    (this._childs[column] as DashboardColumn).removeWidget(child);
+  }
+  render(): HTMLElement {
+    const result = super.render();
+    result.addEventListener("dragover", (event: DragEvent) => {
+      this.onWidgetDragMove(this._dragged_widget, event);
+    });
+    return result;
   }
 }

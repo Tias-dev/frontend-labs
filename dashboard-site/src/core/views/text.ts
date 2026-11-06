@@ -1,7 +1,7 @@
 import { Effect } from "../effect";
 import { ViewBase } from "./view_base";
 
-export class TextView extends ViewBase {
+export class Text extends ViewBase {
   private _handlers: ((new_text: string) => void)[] = [];
   constructor(id: number) {
     super(id, "textarea");

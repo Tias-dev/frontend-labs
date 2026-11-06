@@ -1,17 +1,17 @@
 import { Effect } from "../effect";
 import { GetId } from "../id";
 import { ButtonView } from "./button";
-import { LabelView } from "./label";
+import { Label } from "./label";
 import { ViewBase } from "./view_base";
 
-export class WidgetTopBarView extends ViewBase {
-  private _label: LabelView;
+export class WidgetTopBar extends ViewBase {
+  private _label: Label;
   private _collapse_button: ButtonView;
   private _close_button: ButtonView;
 
   constructor(id: number) {
     super(id, "div");
-    this._label = new LabelView(GetId());
+    this._label = new Label(GetId());
     this._collapse_button = new ButtonView(GetId(), "collapse-button", "_");
     this._close_button = new ButtonView(GetId(), "close-button", "X");
 

@@ -326,15 +326,16 @@ code {
 .dashboard {
   display: flex;
   width: 100%;
-  min-height: 100px;
+  min-height: 100dvh;
 }
 
 .dashboard-column {
   margin-inline: 10px;
   display: grid;
-  align-items: start;
+  align-content: start;
   gap: 10px;
   width: 100%;
+  min-height: 100dvh;
 }
 
 .widget {
@@ -359,10 +360,13 @@ code {
 .note-content {
   width: 90%;
   min-height: 120px;
+  resize: none;
 }
 
 .dragging {
-  opacity: 50%;
+  opacity: 100%;
+  pointer-events: none;
+  background: black;
 }
 
 .column-hovered {
