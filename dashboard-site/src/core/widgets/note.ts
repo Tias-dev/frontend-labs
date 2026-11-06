@@ -7,11 +7,11 @@ export class Note extends Widget {
 
   constructor(id: number) {
     const content = new TextView(GetId());
-    super(id, content)
+    super(id, content);
 
     content.addInputChangeHandler((new_text: string) => {
       this._text = new_text;
-    })
+    });
   }
 
   text(): string {

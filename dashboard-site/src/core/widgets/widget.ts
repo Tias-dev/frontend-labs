@@ -39,7 +39,7 @@ export class Widget extends ViewBase {
   }
 
   collapseToggle() {
-    if(this._widget_view.hidden()) {
+    if (this._widget_view.hidden()) {
       this._widget_view.unhide();
     } else {
       this._widget_view.hide();

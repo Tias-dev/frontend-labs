@@ -24,7 +24,9 @@ export class LabelView extends ViewBase {
   render(): HTMLElement {
     let result = super.render();
 
-    result.addEventListener("change", (e: Event) => {this.onInputChange(e)});
+    result.addEventListener("change", (e: Event) => {
+      this.onInputChange(e);
+    });
 
     return result;
   }

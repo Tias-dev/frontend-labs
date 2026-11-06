@@ -4,5 +4,6 @@
       enable = true;
       files = "\\.(nix)$";
     };
+    prettier.enable = true;
   };
 }
