@@ -74,7 +74,7 @@ export class ViewBase implements Renderable {
     }
   }
 
-  protected addChild(
+  addChild(
     child: ViewBase,
     after_i: number = -1,
     update_html: boolean = true,
@@ -129,7 +129,7 @@ export class ViewBase implements Renderable {
     return false;
   }
 
-  protected removeChild(child: ViewBase): void {
+  removeChild(child: ViewBase): void {
     for (let i = 0; i < this._childs.length; ++i) {
       if (this._childs[i].id() == child.id()) {
         const element = document.getElementById(`${child.id()}`);
@@ -165,6 +165,9 @@ export class ViewBase implements Renderable {
   }
 
   render(): HTMLElement {
+    if (this._html_element) {
+      return this._html_element;
+    }
     let result = document.createElement(this._base_element);
     result.setAttribute("id", `${this._id}`);
 

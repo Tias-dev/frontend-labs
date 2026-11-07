@@ -2,7 +2,7 @@ import { Effect } from "../effect";
 import { Event as CustomEvent } from "../event";
 import { ViewBase } from "./view_base";
 
-export class ButtonView extends ViewBase {
+export class Button extends ViewBase {
   private _onClickEvent: CustomEvent<void>;
   protected _name: string;
   protected _text: string;

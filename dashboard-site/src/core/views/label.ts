@@ -4,16 +4,24 @@ import { ViewBase } from "./view_base";
 
 export class Label extends ViewBase {
   private _onLabelChangeEvent: CustomEvent<string>;
-  constructor(id: number) {
+  constructor(id: number, type: string = "text", name: string | null = null) {
     super(id, "input");
 
     this._onLabelChangeEvent = new CustomEvent<string>();
-
     this.addEffect(new Effect("oneline-text"));
+    if (name) {
+      this.addEffect(new Effect(`label-${name}`));
+    }
+
+    this.htmlElement().setAttribute("type", type);
   }
 
   addInputChangeHandler(handler: (new_text: string) => void) {
     this._onLabelChangeEvent.addHandler(handler);
+  }
+
+  setText(new_text: string): void {
+    (this.htmlElement() as HTMLInputElement).value = new_text;
   }
 
   protected onInputChange(e: Event): void {

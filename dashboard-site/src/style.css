@@ -357,6 +357,10 @@ code {
   width: 100%;
 }
 
+.oneline-text {
+  width: 100%;
+}
+
 .note-content {
   width: 90%;
   min-height: 120px;
@@ -371,4 +375,63 @@ code {
 
 .column-hovered {
   opacity: 50%;
+}
+
+.counter-buttons {
+  display: grid;
+}
+
+.counter-counter {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.counter-value {
+  padding: 10px;
+  background: var(--code-bg);
+  border-radius: 10px;
+}
+
+.counter-step-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.widget-todo {
+  width: 100%;
+}
+
+.label-todo-checkbox {
+  width: 30px;
+  height: 30px;
+}
+
+.button-todo-item-delete {
+  width: 30px;
+  height: 30px;
+  background-image: url("./assets/trash-bin.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.todo-tasks {
+  width: 100%;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: 1fr 40px 40px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.todo-task-label {
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
