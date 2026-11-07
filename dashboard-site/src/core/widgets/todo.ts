@@ -48,7 +48,6 @@ class TodoItem extends ViewBase {
 }
 
 export class TodoList extends Widget {
-  private _tasks: TodoItem[] = [];
   private _tasks_view: ViewBase;
   constructor(id: number) {
     const todo_list_composed = new ViewBase(GetId(), "div");
@@ -81,20 +80,10 @@ export class TodoList extends Widget {
       return;
     }
     const task = new TodoItem(GetId(), task_content);
-    this._tasks.push(task);
-    this._tasks_view.htmlElement().append(task.htmlElement());
+    this._tasks_view.addChild(task);
 
     task.addOnDeleteHandler((task: TodoItem) => {
-      this._tasks.filter((value: TodoItem) => value.id() != task.id());
-      const element = document.getElementById(`${task.id()}`);
-      if (!element) {
-        alert(
-          "Trying to delete task that don't exists in DOM. Task id: " +
-            task.id(),
-        );
-        return;
-      }
-      this._tasks_view.htmlElement().removeChild(element);
+      this._tasks_view.removeChild(task);
     });
   }
 }
