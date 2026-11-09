@@ -39,7 +39,6 @@ export class Widget extends ViewBase {
     this._topbar.addOnCollapseButtonClickedHandler(() => this.collapseToggle());
     this._topbar.addOnLabelChangeHandler((new_label: string) => {
       this._label = new_label;
-      console.log(`New label at widget: ${this.id()}: ${this._label}`);
     });
   }
 

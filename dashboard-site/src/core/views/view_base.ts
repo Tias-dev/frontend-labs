@@ -87,7 +87,6 @@ export class ViewBase implements Renderable {
 
     if (after_i < 0) {
       this._childs.push(child);
-      console.log("Adding element: " + this._html_element);
       if (this._html_element && update_html) {
         this._html_element.append(child.htmlElement());
       }
@@ -129,12 +128,24 @@ export class ViewBase implements Renderable {
     return false;
   }
 
+  private removeHtmlNode(node: HTMLElement) {
+    let contains = false;
+    this._html_element.childNodes.forEach((child) => {
+      if (child == node) {
+        contains = true;
+      }
+    });
+    if (contains) {
+      this._html_element.removeChild(node);
+    }
+  }
+
   removeChild(child: ViewBase): void {
     for (let i = 0; i < this._childs.length; ++i) {
       if (this._childs[i].id() == child.id()) {
         const element = document.getElementById(`${child.id()}`);
         if (element) {
-          this._html_element.removeChild(element);
+          this.removeHtmlNode(element);
         }
       }
     }

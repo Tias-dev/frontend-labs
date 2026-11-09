@@ -10,10 +10,6 @@ export class Tool extends Button {
 
     this.addEffect(new Effect(`tool-item`));
     this.addEffect(new Effect(`tool-${name}`));
-
-    this.addOnClickHandler(() => {
-      console.log(`Clicked on tool ${this._name}`);
-    });
   }
 
   hoverText(): string {

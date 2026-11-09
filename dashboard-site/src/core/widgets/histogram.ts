@@ -8,11 +8,12 @@ class HistogramCanvas extends ViewBase {
   private _data: number[] = [];
   private _n_bins: number;
   private _bar_color: string = "#0000ff";
-  private _graphic_padding: number = 10;
+  private _graphic_padding: number = 20;
 
   constructor(id: number, n_bins: number = 10) {
     super(id, "canvas");
     this._n_bins = n_bins;
+    this.addEffect(new Effect("histogram-canvas"));
   }
 
   setData(data: number[]): void {
@@ -45,10 +46,19 @@ class HistogramCanvas extends ViewBase {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const graphWidth = canvas.width - this._graphic_padding * 2;
+    const graph_width = canvas.width - this._graphic_padding * 2;
     const graph_height = canvas.height - this._graphic_padding * 2;
     const max_frequency = Math.max(...bins, 1);
-    const bar_width = graphWidth / this._graphic_padding;
+    const bar_width = graph_width / this._n_bins;
+
+    const text_color = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("color")
+      .trim();
+    const bg_color = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("bg")
+      .trim();
 
     bins.forEach((frequency, index) => {
       // Calculate normalized height percentage based on highest bin
@@ -66,14 +76,28 @@ class HistogramCanvas extends ViewBase {
 
       // Optional: Draw text values above bars containing data
       if (frequency > 0) {
-        ctx.fillStyle = "#1e293b";
+        ctx.fillStyle = text_color;
         ctx.font = "12px sans-serif";
         ctx.textAlign = "center";
         ctx.fillText(frequency.toString(), x + bar_width / 2, y - 5);
       }
     });
+    for (
+      let val = min_val, index = 0;
+      val < max_val;
+      val += bin_width, index++
+    ) {
+      ctx.fillStyle = text_color;
+      ctx.font = "8px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        val.toFixed(1),
+        this._graphic_padding + (index + 1) * bar_width - bar_width / 2,
+        canvas.height - this._graphic_padding / 2,
+      );
+    }
 
-    ctx.strokeStyle = "#94a3b8";
+    ctx.strokeStyle = bg_color;
     ctx.lineWidth = 1;
     ctx.beginPath();
     // Y Axis Line

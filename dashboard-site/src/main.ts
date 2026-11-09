@@ -1,4 +1,5 @@
 import { GetId } from "./core/id";
+import { ThemeSwitcher } from "./core/theme-switcher";
 import { Dashboard } from "./core/views/dashboard";
 import { HorizontalSeparator } from "./core/views/separator";
 import { ToolBar } from "./core/views/toolbar";
@@ -12,6 +13,7 @@ import "./style.css";
 let dashboard = new Dashboard(GetId(), 3);
 let spacer = new HorizontalSeparator(GetId(), 20);
 let toolbar = new ToolBar(GetId(), 3);
+const theme_switcher = new ThemeSwitcher();
 
 toolbar.addWantNewWidgetHandler((data) => {
   const widget: Widget = (() => {
@@ -28,6 +30,14 @@ toolbar.addWantNewWidgetHandler((data) => {
   })();
 
   dashboard.addColumnWidget(data.column - 1, widget);
+});
+
+toolbar.addWantDashboardClearHandler(() => {
+  dashboard.clear();
+});
+
+toolbar.addWantColorschemeChangeHandler(() => {
+  theme_switcher.toogleTheme();
 });
 
 const app = document.querySelector<HTMLDivElement>("#app");

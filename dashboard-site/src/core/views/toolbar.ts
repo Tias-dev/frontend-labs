@@ -72,6 +72,9 @@ export class ToolBar extends ViewBase {
     widget: string;
     column: number;
   }>;
+  private _onWantDashboardClearEvent: CustomEvent<void>;
+  private _onWantColorschemeChangeEvent: CustomEvent<void>;
+
   constructor(id: number, columns_amount = 3) {
     super(id, "div");
     this.addEffect(new Effect("toolbar"));
@@ -80,6 +83,8 @@ export class ToolBar extends ViewBase {
       widget: string;
       column: number;
     }>();
+    this._onWantDashboardClearEvent = new CustomEvent<void>();
+    this._onWantColorschemeChangeEvent = new CustomEvent<void>();
 
     const add_widget_tool = new Tool(GetId(), "add-widget", "Add new widget");
     const reset_dashboard_tool = new Tool(
@@ -136,7 +141,19 @@ export class ToolBar extends ViewBase {
     this._onWantAddNewWidgetEvent.addHandler(handler);
   }
 
-  resetDashboard(): void {}
+  addWantDashboardClearHandler(hanlder: () => void): void {
+    this._onWantDashboardClearEvent.addHandler(hanlder);
+  }
 
-  toggleTheme(): void {}
+  addWantColorschemeChangeHandler(hanlder: () => void): void {
+    this._onWantColorschemeChangeEvent.addHandler(hanlder);
+  }
+
+  resetDashboard(): void {
+    this._onWantDashboardClearEvent.invoke();
+  }
+
+  toggleTheme(): void {
+    this._onWantColorschemeChangeEvent.invoke();
+  }
 }

@@ -15,7 +15,6 @@ class DashboardColumn extends ViewBase {
   }
 
   addWidget(widget: Widget, after_i: number = -1, update_html: boolean = true) {
-    console.log("adding element to column " + this.id());
     super.addChild(widget, after_i, update_html);
   }
 
@@ -24,7 +23,10 @@ class DashboardColumn extends ViewBase {
   }
 
   clearWidgets() {
-    this._childs = [];
+    const childs = [...this._childs];
+    for (let i = 0; i < childs.length; ++i) {
+      this.removeChild(childs[i]);
+    }
   }
 
   private onDraggedItemHoverHandler(event: DragEvent): void {
@@ -97,6 +99,12 @@ export class Dashboard extends ViewBase {
     }
     this.addEffect(new Effect("dashboard"));
   }
+  clear(): void {
+    for (let i = 0; i < this._childs.length; ++i) {
+      (this._childs[i] as DashboardColumn).clearWidgets();
+    }
+    this.resyncColumns();
+  }
 
   private onWidgetDragStart(widget: Widget, _: DragEvent) {
     this._dragged_widget = widget;
@@ -121,14 +129,13 @@ export class Dashboard extends ViewBase {
   private resyncColumns() {
     for (let i = 0; i < this._childs.length; ++i) {
       const column = this._childs[i] as DashboardColumn;
-      const column_html = column.htmlElement();
+      const column_child_ids = [];
+      column.htmlElement().childNodes.forEach((child) => {
+        column_child_ids.push((child as HTMLElement).id);
+      });
       column.clearWidgets();
-      column_html.childNodes.forEach((child) => {
-        column.addWidget(
-          this._widgets_map[Number((child as HTMLElement).id)],
-          -1,
-          false,
-        );
+      column_child_ids.forEach((id) => {
+        column.addWidget(this._widgets_map[Number(id)], -1, true);
       });
     }
   }
