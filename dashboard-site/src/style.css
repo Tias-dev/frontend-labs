@@ -308,7 +308,17 @@ code {
 }
 
 .tool-add-widget {
-  background: cyan;
+  background-image: url("./assets/plus.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.add-widget-form {
+  display: grid;
+  gap: 20px;
+}
+.add-widget-form h6 {
+  margin-bottom: -10px;
 }
 
 .tool-reset-dashboard {

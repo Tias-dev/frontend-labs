@@ -14,11 +14,7 @@ class DashboardColumn extends ViewBase {
     this.addEffect(new Effect("dashboard-column"));
   }
 
-  addWidget(
-    widget: ViewBase,
-    after_i: number = -1,
-    update_html: boolean = true,
-  ) {
+  addWidget(widget: Widget, after_i: number = -1, update_html: boolean = true) {
     console.log("adding element to column " + this.id());
     super.addChild(widget, after_i, update_html);
   }
