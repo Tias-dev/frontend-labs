@@ -16,6 +16,13 @@ class CounterValue extends ViewBase {
     this._value = value;
     this._step = step;
   }
+  value(): number {
+    return this._value;
+  }
+
+  setValue(new_value: number): void {
+    this._value = new_value;
+  }
 
   increment() {
     this._value += this._step;
@@ -25,6 +32,10 @@ class CounterValue extends ViewBase {
   decrement() {
     this._value -= this._step;
     this.htmlElement().innerHTML = `${this._value}`;
+  }
+
+  step(): number {
+    return this._step;
   }
 
   setStep(new_step: number) {
@@ -39,6 +50,8 @@ class CounterValue extends ViewBase {
 }
 
 export class Counter extends Widget {
+  private _counter: CounterValue;
+  private _step: Label;
   constructor(id: number) {
     const counter = new CounterValue(GetId());
     const increment_button = new Button(GetId(), "increment", "+");
@@ -81,5 +94,34 @@ export class Counter extends Widget {
     });
 
     super(id, composed_view);
+    this._counter = counter;
+    this._step = step_field;
+  }
+
+  saveState() {
+    super.saveState();
+    const data = {
+      counter: this._counter.value(),
+      step: this._counter.step(),
+    };
+
+    localStorage.setItem(`counter-${this.id()}`, JSON.stringify(data));
+  }
+
+  loadState() {
+    super.loadState();
+    const data_string = localStorage.getItem(`counter-${this.id()}`);
+    if (!data_string) {
+      alert(
+        "Requested widget(counter) with id: " +
+          this.id() +
+          " not found in local storage",
+      );
+      return;
+    }
+    const data = JSON.parse(data_string);
+    this._counter.setValue(data.value);
+    this._counter.setStep(data.step);
+    this._step.setText(`${data.step}`);
   }
 }

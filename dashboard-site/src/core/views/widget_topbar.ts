@@ -35,4 +35,8 @@ export class WidgetTopBar extends ViewBase {
   addOnCloseButtonClickedHandler(handler: () => void) {
     this._close_button.addOnClickHandler(handler);
   }
+
+  setLabel(new_label: string) {
+    this._label.setText(new_label);
+  }
 }

@@ -42,6 +42,35 @@ export class Widget extends ViewBase {
     });
   }
 
+  saveState() {
+    const data = {
+      label: this._label,
+      isCollapsed: this._widget_view.hidden(),
+    };
+
+    localStorage.setItem(`widget-${this.id()}`, JSON.stringify(data));
+  }
+
+  loadState() {
+    const data_string = localStorage.getItem(`widget-${this.id()}`);
+    if (!data_string) {
+      alert(
+        "Requested widget with id: " +
+          this.id() +
+          " not found in local storage",
+      );
+      return;
+    }
+    const data = JSON.parse(data_string);
+
+    this._label = data.label;
+    this._topbar.setLabel(this._label);
+
+    if (data.isCollapsed != this._widget_view.hidden()) {
+      this.collapseToggle();
+    }
+  }
+
   protected view(): ViewBase | null {
     return this._widget_view;
   }

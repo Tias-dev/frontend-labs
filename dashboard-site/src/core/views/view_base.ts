@@ -74,6 +74,10 @@ export class ViewBase implements Renderable {
     }
   }
 
+  childs(): ViewBase[] {
+    return this._childs;
+  }
+
   addChild(
     child: ViewBase,
     after_i: number = -1,

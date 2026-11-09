@@ -114,6 +114,7 @@ class HistogramCanvas extends ViewBase {
 
 export class Histogram extends Widget {
   private _canvas: HistogramCanvas;
+  private _values: number[] = [];
   constructor(id: number) {
     const histogram_composed = new ViewBase(GetId(), "div");
     histogram_composed.addEffect(new Effect("widget-histogram"));
@@ -146,7 +147,34 @@ export class Histogram extends Widget {
     const numbers = numbers_string
       .split(",")
       .map((n_str: string) => Number(n_str));
+    this._values = numbers;
     this._canvas.setData(numbers);
+    this._canvas.refreshHistogram();
+  }
+
+  saveState() {
+    super.saveState();
+    const data = {
+      values: this._values,
+    };
+
+    localStorage.setItem(`histogram-${this.id()}`, JSON.stringify(data));
+  }
+
+  loadState() {
+    super.loadState();
+    const data_string = localStorage.getItem(`histogram-${this.id()}`);
+    if (!data_string) {
+      alert(
+        "Requested widget(histogram) with id: " +
+          this.id() +
+          " not found in local storage",
+      );
+      return;
+    }
+    const data = JSON.parse(data_string);
+    this._values = data.values;
+    this._canvas.setData(this._values);
     this._canvas.refreshHistogram();
   }
 }

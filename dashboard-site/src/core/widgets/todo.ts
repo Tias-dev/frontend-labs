@@ -9,6 +9,7 @@ class TodoItem extends ViewBase {
   private readonly _task: string;
   private _completed: boolean;
   private _delete_button: Button;
+  private _checkbox: CheckBox;
 
   constructor(id: number, task: string) {
     super(id, "div");
@@ -17,14 +18,14 @@ class TodoItem extends ViewBase {
     const task_label = new ViewBase(GetId(), "span");
     task_label.addEffect(new Effect("todo-task-label"));
     (task_label.htmlElement() as HTMLSpanElement).textContent = task;
-    const checkbox = new CheckBox(GetId(), "todo-checkbox", false);
+    this._checkbox = new CheckBox(GetId(), "todo-checkbox", false);
     this._delete_button = new Button(GetId(), "todo-item-delete");
 
     this.addChild(task_label);
-    this.addChild(checkbox);
+    this.addChild(this._checkbox);
     this.addChild(this._delete_button);
 
-    checkbox.addOnCheckboxClickHandler((value: boolean) => {
+    this._checkbox.addOnCheckboxClickHandler((value: boolean) => {
       console.log(
         `Task: ${this._task} has changed state to: ${this._completed}`,
       );
@@ -32,6 +33,11 @@ class TodoItem extends ViewBase {
     });
 
     this.addEffect(new Effect("todo-item"));
+  }
+
+  setCompleteStatus(complete: boolean): void {
+    this._completed = complete;
+    this._checkbox.setValue(complete);
   }
 
   addOnDeleteHandler(hanler: (item: TodoItem) => void): void {
@@ -84,6 +90,41 @@ export class TodoList extends Widget {
 
     task.addOnDeleteHandler((task: TodoItem) => {
       this._tasks_view.removeChild(task);
+    });
+  }
+
+  saveState() {
+    super.saveState();
+    const data = {
+      tasks: (this._tasks_view.childs() as TodoItem[]).map((item) => ({
+        task: item.task(),
+        completed: item.completed(),
+      })),
+    };
+
+    localStorage.setItem(`todo-${this.id()}`, JSON.stringify(data));
+  }
+
+  loadState() {
+    super.loadState();
+    const data_string = localStorage.getItem(`todo-${this.id()}`);
+    if (!data_string) {
+      alert(
+        "Requested widget(todo) with id: " +
+          this.id() +
+          " not found in local storage",
+      );
+      return;
+    }
+    const data = JSON.parse(data_string);
+    (data.tasks as { task: string; completed: boolean }[]).forEach((item) => {
+      const task = new TodoItem(GetId(), item.task);
+      task.setCompleteStatus(item.completed);
+      this._tasks_view.addChild(task);
+
+      task.addOnDeleteHandler((task: TodoItem) => {
+        this._tasks_view.removeChild(task);
+      });
     });
   }
 }

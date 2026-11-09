@@ -13,6 +13,14 @@ export class Text extends ViewBase {
     this._handlers.push(handler);
   }
 
+  text(): string {
+    return (this.htmlElement() as HTMLTextAreaElement).textContent;
+  }
+
+  setText(new_text: string): void {
+    (this.htmlElement() as HTMLTextAreaElement).textContent = new_text;
+  }
+
   protected onInputChange(e: Event): void {
     const new_text = (e.target as HTMLTextAreaElement).value;
     console.log(`Text(${this.id()}) has been changed to ${new_text}`);

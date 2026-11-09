@@ -23,4 +23,9 @@ export class CheckBox extends Label {
   addOnCheckboxClickHandler(handler: (value: boolean) => void) {
     this._onClickEvent.addHandler(handler);
   }
+
+  setValue(value: boolean) {
+    this._value = value;
+    (this.htmlElement() as HTMLInputElement).checked = value;
+  }
 }
