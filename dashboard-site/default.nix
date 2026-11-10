@@ -22,7 +22,7 @@
     };
   };
 in
-  runCommand "simple-site" {} ''
+  runCommand "dashboard-site" {} ''
     mkdir -p $out
     cp -r ${npmPackage}/lib/node_modules/dashboard-site/dist/* $out/
   ''
