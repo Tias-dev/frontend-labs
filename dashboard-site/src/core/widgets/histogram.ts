@@ -137,6 +137,10 @@ export class Histogram extends Widget {
     this._canvas = canvas;
   }
 
+  type(): string {
+    return "histogram";
+  }
+
   setHistogramData(): void {
     const numbers_string = prompt("Input numbers(comma separated): ");
     if (!numbers_string) {

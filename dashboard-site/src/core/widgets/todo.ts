@@ -79,6 +79,10 @@ export class TodoList extends Widget {
     this._tasks_view = todo_tasks;
   }
 
+  type(): string {
+    return "todo";
+  }
+
   addTask() {
     const task_content = prompt("Input task content: ");
     if (!task_content) {

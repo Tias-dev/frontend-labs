@@ -4,10 +4,11 @@ import { ViewBase } from "../views/view_base";
 import { Effect } from "../effect";
 import { Event as CustomEvent } from "../event";
 
-export class Widget extends ViewBase {
+export abstract class Widget extends ViewBase {
   private _onDragStartEvent: CustomEvent<{ widget: Widget; event: DragEvent }>;
   private _onDragEndEvent: CustomEvent<{ widget: Widget; event: DragEvent }>;
   private _onDragMoveEvent: CustomEvent<{ widget: Widget; event: DragEvent }>;
+  private _onDeleteEvent: CustomEvent<void>;
 
   private _label: string = "";
 
@@ -30,6 +31,7 @@ export class Widget extends ViewBase {
       widget: Widget;
       event: DragEvent;
     }>();
+    this._onDeleteEvent = new CustomEvent<void>();
 
     this.addChild(this._topbar);
     this.addChild(this._widget_view);
@@ -41,6 +43,8 @@ export class Widget extends ViewBase {
       this._label = new_label;
     });
   }
+
+  abstract type(): string;
 
   saveState() {
     const data = {
@@ -62,11 +66,13 @@ export class Widget extends ViewBase {
       return;
     }
     const data = JSON.parse(data_string);
+    console.log(this.id(), data.isCollapsed, this._widget_view.hidden());
 
     this._label = data.label;
     this._topbar.setLabel(this._label);
 
     if (data.isCollapsed != this._widget_view.hidden()) {
+      console.log("Do collapsing");
       this.collapseToggle();
     }
   }
@@ -80,7 +86,11 @@ export class Widget extends ViewBase {
   }
 
   delete() {
-    console.log("Do delete things!");
+    this._onDeleteEvent.invoke();
+  }
+
+  addOnDeleteHanlder(handler: () => void) {
+    this._onDeleteEvent.addHandler(handler);
   }
 
   collapseToggle() {

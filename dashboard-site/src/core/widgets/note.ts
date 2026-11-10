@@ -13,6 +13,9 @@ export class Note extends Widget {
 
     content.addEffect(new Effect("note-content"));
   }
+  type(): string {
+    return "note";
+  }
 
   text(): string {
     return this._text.text();

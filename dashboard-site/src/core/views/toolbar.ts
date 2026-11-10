@@ -129,6 +129,7 @@ export class ToolBar extends ViewBase {
     });
 
     this.addChild(this._add_widget_modal);
+    this._add_widget_modal.addEffect(new Effect("new-widget-modal"));
   }
 
   addNewWidget(): void {

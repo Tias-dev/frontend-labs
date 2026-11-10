@@ -1,6 +1,10 @@
 import { Effect } from "../effect";
 import { Event as CustomEvent } from "../event";
 import { GetId } from "../id";
+import { Counter } from "../widgets/counter";
+import { Histogram } from "../widgets/histogram";
+import { Note } from "../widgets/note";
+import { TodoList } from "../widgets/todo";
 import { Widget } from "../widgets/widget";
 import { ViewBase } from "./view_base";
 
@@ -16,10 +20,17 @@ class DashboardColumn extends ViewBase {
 
   addWidget(widget: Widget, after_i: number = -1, update_html: boolean = true) {
     super.addChild(widget, after_i, update_html);
+    widget.addOnDeleteHanlder(() => {
+      this.removeWidget(widget);
+    });
   }
 
   removeWidget(widget: ViewBase) {
     super.removeChild(widget);
+  }
+
+  widgets(): Widget[] {
+    return this._childs as Widget[];
   }
 
   clearWidgets() {
@@ -104,6 +115,77 @@ export class Dashboard extends ViewBase {
       (this._childs[i] as DashboardColumn).clearWidgets();
     }
     this.resyncColumns();
+  }
+
+  saveState() {
+    const data = {
+      columns: this._childs.length,
+      widgets: [],
+    };
+
+    (this._childs as DashboardColumn[]).forEach((column, index) => {
+      column.widgets().forEach((widget) => {
+        data.widgets.push({
+          column_idx: index,
+          widget_id: widget.id(),
+          widget_type: widget.type(),
+        });
+        widget.saveState();
+      });
+    });
+
+    localStorage.setItem(`dashboard-${this.id()}`, JSON.stringify(data));
+  }
+
+  loadState() {
+    const data = JSON.parse(localStorage.getItem(`dashboard-${this.id()}`));
+    if (!data) {
+      console.error(`No data specified for dashboard-${this.id()}`);
+      return;
+    }
+    const columns = data.columns;
+    while (this._childs.length < columns) {
+      const column = new DashboardColumn(GetId());
+      this.addChild(column);
+    }
+    while (this._childs.length > columns) {
+      this.removeChild(this._childs[-1]);
+    }
+
+    this._childs.forEach((child) => {
+      (child as DashboardColumn).clearWidgets();
+    });
+
+    const widgets: {
+      column_idx: number;
+      widget_id: number;
+      widget_type: string;
+    }[] = data.widgets;
+    const create_widget_from_type = (id: number, type: string) => {
+      switch (type) {
+        case "note":
+          return new Note(id);
+        case "counter":
+          return new Counter(id);
+        case "histogram":
+          return new Histogram(id);
+        case "todo":
+          return new TodoList(id);
+      }
+    };
+    console.log("Restoring " + widgets.length + " widgets");
+    widgets.forEach((widget_data) => {
+      const widget = create_widget_from_type(
+        widget_data.widget_id,
+        widget_data.widget_type,
+      );
+      widget.loadState();
+      this.addColumnWidget(widget_data.column_idx, widget);
+    });
+  }
+
+  columns(): number {
+    return this._childs.length;
   }
 
   private onWidgetDragStart(widget: Widget, _: DragEvent) {

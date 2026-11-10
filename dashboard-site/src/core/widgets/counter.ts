@@ -98,6 +98,10 @@ export class Counter extends Widget {
     this._step = step_field;
   }
 
+  type(): string {
+    return "counter";
+  }
+
   saveState() {
     super.saveState();
     const data = {
@@ -120,7 +124,7 @@ export class Counter extends Widget {
       return;
     }
     const data = JSON.parse(data_string);
-    this._counter.setValue(data.value);
+    this._counter.setValue(data.counter);
     this._counter.setStep(data.step);
     this._step.setText(`${data.step}`);
   }

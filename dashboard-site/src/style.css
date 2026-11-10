@@ -153,8 +153,12 @@ p {
   display: grid;
   gap: 20px;
 }
+.new-widget-modal {
+  background: var(--bg);
+}
 
 .add-widget-form h6 {
+  color: var(--text);
   margin-bottom: -10px;
 }
 

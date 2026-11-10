@@ -157,21 +157,13 @@ export class ViewBase implements Renderable {
   }
 
   hide() {
-    if (this._html_element == null) {
-      console.log("Trying to hide not existing element!");
-      return;
-    }
-    this._display_status = this._html_element.style.display;
-    this._html_element.style.display = "none";
+    this._display_status = this.htmlElement().style.display;
+    this.htmlElement().style.display = "none";
     this._hiden = true;
   }
 
   unhide() {
-    if (this._html_element == null) {
-      console.log("Trying to unhide not existing element!");
-      return;
-    }
-    this._html_element.style.display = this._display_status;
+    this.htmlElement().style.display = this._display_status;
     this._hiden = false;
   }
 

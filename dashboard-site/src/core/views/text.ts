@@ -3,6 +3,7 @@ import { ViewBase } from "./view_base";
 
 export class Text extends ViewBase {
   private _handlers: ((new_text: string) => void)[] = [];
+  private _text: string = "";
   constructor(id: number) {
     super(id, "textarea");
 
@@ -14,11 +15,12 @@ export class Text extends ViewBase {
   }
 
   text(): string {
-    return (this.htmlElement() as HTMLTextAreaElement).textContent;
+    return this._text;
   }
 
   setText(new_text: string): void {
-    (this.htmlElement() as HTMLTextAreaElement).textContent = new_text;
+    this._text = new_text;
+    (this.htmlElement() as HTMLTextAreaElement).innerText = new_text;
   }
 
   protected onInputChange(e: Event): void {
@@ -27,6 +29,7 @@ export class Text extends ViewBase {
     for (let i = 0; i < this._handlers.length; ++i) {
       this._handlers[i](new_text);
     }
+    this._text = new_text;
   }
 
   render(): HTMLElement {
