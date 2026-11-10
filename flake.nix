@@ -42,6 +42,7 @@
       in {
         packages = {
           simple-site = pkgs.callPackage ./simple-site {};
+          dashboard-site = pkgs.callPackage ./dashboard-site {};
         };
         devShells = {
           default = inputs.devenv.lib.mkShell {
